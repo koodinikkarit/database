@@ -25,10 +25,15 @@ func CreateGetDB(
 				dbName,
 			)
 
+			userStr := dbUser
+			if dbPass != "" {
+				userStr = userStr + ":" + dbPass
+			}
+
 			var err error
 			db, err = gorm.Open(
 				"mysql",
-				dbUser+":"+dbPass+"@tcp("+dbIP+":"+dbPort+")/"+dbName+"?parseTime=True&loc=Local",
+				userStr+"@tcp("+dbIP+":"+dbPort+")/"+dbName+"?parseTime=True&loc=Local",
 			)
 			if err != nil {
 				log.Fatalf("Creting db connection failed error %v", err)

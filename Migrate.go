@@ -17,7 +17,12 @@ func Migrate(
 	dbPort string,
 	dbName string,
 ) {
-	db, err := sql.Open("mysql", dbUser+":"+dbPass+"@tcp("+dbIP+":"+dbPort+")/")
+	userStr := dbUser
+	if dbPass != "" {
+		userStr = userStr + ":" + dbPass
+	}
+
+	db, err := sql.Open("mysql", userStr+"@tcp("+dbIP+":"+dbPort+")/")
 	if err != nil {
 		log.Fatalf("Failed to open db connection for db creation %v", err)
 	}
@@ -27,7 +32,7 @@ func Migrate(
 	}
 	db.Close()
 
-	db, err = sql.Open("mysql", dbUser+":"+dbPass+"@tcp("+dbIP+":"+dbPort+")/"+dbName+"?multiStatements=true")
+	db, err = sql.Open("mysql", userStr+"@tcp("+dbIP+":"+dbPort+")/"+dbName+"?multiStatements=true")
 	if err != nil {
 		log.Fatalf("Error while opening connnection for migrations %v", err)
 	}
